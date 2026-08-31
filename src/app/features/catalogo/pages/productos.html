@@ -1,0 +1,103 @@
+<div class="encabezado">
+  <h1>Catálogo</h1>
+  <div class="acciones">
+    <button type="button" class="boton-secundario" [disabled]="generando()" (click)="generarDesdePendientes()">
+      {{ generando() ? 'Generando…' : 'Generar desde pendientes' }}
+    </button>
+    <a routerLink="/catalogo/nuevo" class="boton-principal">+ Nuevo producto</a>
+  </div>
+</div>
+
+@if (resumenGeneracion(); as resumen) {
+  <p class="banner">{{ resumen }}</p>
+}
+
+<div class="tarjeta">
+  <input
+    type="search"
+    class="filtro"
+    placeholder="Filtrar por nombre, marca o EAN…"
+    [value]="filtro()"
+    (input)="filtrar($any($event.target).value)"
+    aria-label="Filtrar productos"
+  />
+
+  @switch (estado()) {
+    @case ('cargando') {
+      <div class="esqueleto" aria-hidden="true"></div>
+    }
+    @case ('error') {
+      <div class="mensaje-error">
+        @for (error of errores(); track error) {
+          <p>{{ error }}</p>
+        }
+        <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+      </div>
+    }
+    @case ('ok') {
+      @if (filas().length === 0) {
+        <p class="vacio">
+          @if (filtro().trim()) {
+            Sin resultados para "{{ filtro() }}".
+          } @else {
+            El catálogo está vacío: creá el primer producto o generá desde pendientes.
+          }
+        </p>
+      } @else {
+        <div class="tabla-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Marca</th>
+                <th>Contenido</th>
+                <th>EAN</th>
+                <th class="th-acciones"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (fila of filas(); track fila.id) {
+                <tr>
+                  <td>
+                    <span class="nombre">{{ fila.nombre }}</span>
+                    @if (!fila.curado) {
+                      <span class="badge-sin-curar" title="Generado desde pendientes: nombre provisorio, falta marca/categoría/contenido">sin curar</span>
+                    }
+                    @if (fila.categoria) {
+                      <span class="categoria">{{ fila.categoria }}</span>
+                    }
+                  </td>
+                  <td>{{ fila.marca ?? '—' }}</td>
+                  <td>
+                    @if (fila.contenidoValor !== null) {
+                      {{ fila.contenidoValor }} {{ fila.contenidoUnidad }}
+                    } @else {
+                      —
+                    }
+                  </td>
+                  <td class="ean">{{ fila.ean ?? '—' }}</td>
+                  <td class="acciones-fila">
+                    <a [routerLink]="['/catalogo', fila.id]" class="accion" title="Editar">✏️</a>
+                    <button
+                      type="button"
+                      class="accion"
+                      title="Dar de baja"
+                      [disabled]="eliminando() === fila.id"
+                      (click)="eliminar(fila)"
+                    >🗑️</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="paginacion">
+          <button type="button" [disabled]="!hayAnterior()" (click)="irA(-1)">← Anterior</button>
+          <span>{{ desde() }}–{{ hasta() }} de {{ total() }}</span>
+          <button type="button" [disabled]="!haySiguiente()" (click)="irA(1)">Siguiente →</button>
+        </div>
+      }
+    }
+  }
+</div>

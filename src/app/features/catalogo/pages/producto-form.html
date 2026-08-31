@@ -1,0 +1,107 @@
+<div class="encabezado">
+  <a routerLink="/catalogo" class="volver">← Volver al catálogo</a>
+  <h1>{{ esEdicion() ? 'Editar producto' : 'Nuevo producto' }}</h1>
+</div>
+
+@switch (estado()) {
+  @case ('cargando') {
+    <div class="tarjeta esqueleto" aria-hidden="true"></div>
+  }
+  @case ('error') {
+    <div class="mensaje-error">
+      @for (error of errores(); track error) {
+        <p>{{ error }}</p>
+      }
+      <a routerLink="/catalogo" class="volver">Volver al catálogo</a>
+    </div>
+  }
+  @case ('ok') {
+    @if (inactivo()) {
+      <p class="aviso-inactivo">Este producto está dado de baja: no se puede editar.</p>
+    }
+
+    <form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+      <div class="campo">
+        <label for="nombre">Nombre *</label>
+        <input id="nombre" type="text" formControlName="nombre" maxlength="200" placeholder="Ej: Yerba mate Playadito suave" />
+        @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+          <p class="error-campo">El nombre es obligatorio (máximo 200 caracteres).</p>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="marca">Marca</label>
+        <div class="fila-marca">
+          <select id="marca" formControlName="marcaId">
+            <option [ngValue]="null">Sin marca</option>
+            @for (marca of marcas(); track marca.id) {
+              <option [ngValue]="marca.id">{{ marca.nombre }}</option>
+            }
+          </select>
+          <button type="button" class="boton-secundario" (click)="mostrarNuevaMarca.set(!mostrarNuevaMarca())">
+            + Nueva
+          </button>
+        </div>
+        @if (mostrarNuevaMarca()) {
+          <div class="fila-marca nueva-marca">
+            <input
+              type="text"
+              placeholder="Nombre de la marca"
+              maxlength="100"
+              [value]="nombreNuevaMarca()"
+              (input)="nombreNuevaMarca.set($any($event.target).value)"
+            />
+            <button type="button" class="boton-secundario" [disabled]="creandoMarca() || !nombreNuevaMarca().trim()" (click)="crearMarca()">
+              {{ creandoMarca() ? 'Creando…' : 'Crear' }}
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="categoria">Categoría</label>
+        <select id="categoria" formControlName="categoriaId">
+          <option [ngValue]="null">Sin categoría</option>
+          @for (categoria of categorias(); track categoria.id) {
+            <option [ngValue]="categoria.id">{{ etiquetaCategoria(categoria) }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="campo contenido">
+        <label>Contenido</label>
+        <div class="fila-contenido">
+          <input type="number" formControlName="contenidoValor" placeholder="Ej: 2.25" step="any" min="0" aria-label="Valor del contenido" />
+          <select formControlName="contenidoUnidad" aria-label="Unidad del contenido">
+            <option [ngValue]="null">Unidad…</option>
+            @for (unidad of unidades; track unidad) {
+              <option [ngValue]="unidad">{{ unidad }}</option>
+            }
+          </select>
+        </div>
+        <p class="ayuda">Permite comparar precio por unidad. Valor y unidad van juntos.</p>
+      </div>
+
+      <div class="campo">
+        <label for="ean">EAN (código de barras)</label>
+        <input id="ean" type="text" formControlName="ean" inputmode="numeric" maxlength="14" placeholder="8 a 14 dígitos" />
+        @if (form.controls.ean.touched && form.controls.ean.invalid) {
+          <p class="error-campo">El EAN debe tener entre 8 y 14 dígitos.</p>
+        }
+        <p class="ayuda">Con EAN, las publicaciones pendientes de los supermercados matchean automáticamente.</p>
+      </div>
+
+      @if (errores().length > 0) {
+        <div class="mensaje-error">
+          @for (error of errores(); track error) {
+            <p>{{ error }}</p>
+          }
+        </div>
+      }
+
+      <button type="submit" class="boton-principal" [disabled]="guardando() || inactivo()">
+        {{ guardando() ? 'Guardando…' : (esEdicion() ? 'Guardar cambios' : 'Crear producto') }}
+      </button>
+    </form>
+  }
+}

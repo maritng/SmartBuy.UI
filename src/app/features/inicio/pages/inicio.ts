@@ -40,7 +40,7 @@ export class Inicio {
         }
       },
       error: () => {
-        this.errores.set(['No se pudo conectar con la API. ¿Está levantado el backend en el puerto 5599?']);
+        this.errores.set(['No se pudo conectar con la API. ¿Está levantado el backend en el puerto 5080?']);
         this.estado.set('error');
       }
     });

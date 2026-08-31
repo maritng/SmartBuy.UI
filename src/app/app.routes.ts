@@ -13,6 +13,18 @@ export const routes: Routes = [
     path: 'lista/resultado',
     loadComponent: () => import('./features/lista/pages/resultado').then((m) => m.Resultado)
   },
+  {
+    path: 'catalogo',
+    loadComponent: () => import('./features/catalogo/pages/productos').then((m) => m.Productos)
+  },
+  {
+    path: 'catalogo/nuevo',
+    loadComponent: () => import('./features/catalogo/pages/producto-form').then((m) => m.ProductoForm)
+  },
+  {
+    path: 'catalogo/:id',
+    loadComponent: () => import('./features/catalogo/pages/producto-form').then((m) => m.ProductoForm)
+  },
   { path: '', pathMatch: 'full', redirectTo: 'lista' },
   { path: '**', redirectTo: 'lista' }
 ];

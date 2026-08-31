@@ -16,7 +16,7 @@ export class Shell {
   protected readonly secciones = [
     { ruta: '/inicio', etiqueta: 'Inicio', disponible: true },
     { ruta: '/lista', etiqueta: 'Mi lista', disponible: true },
-    { ruta: '/catalogo', etiqueta: 'Catálogo', disponible: false },
+    { ruta: '/catalogo', etiqueta: 'Catálogo', disponible: true },
     { ruta: '/matching', etiqueta: 'Matching', disponible: false }
   ];
 }
