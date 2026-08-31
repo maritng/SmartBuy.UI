@@ -15,7 +15,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 export class Shell {
   protected readonly secciones = [
     { ruta: '/inicio', etiqueta: 'Inicio', disponible: true },
-    { ruta: '/lista', etiqueta: 'Mi lista', disponible: false },
+    { ruta: '/lista', etiqueta: 'Mi lista', disponible: true },
     { ruta: '/catalogo', etiqueta: 'Catálogo', disponible: false },
     { ruta: '/matching', etiqueta: 'Matching', disponible: false }
   ];

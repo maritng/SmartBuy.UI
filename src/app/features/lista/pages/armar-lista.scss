@@ -1,0 +1,202 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+
+h1 {
+  font-size: var(--texto-titulo);
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.05rem;
+}
+
+.pista {
+  color: var(--color-tinta-suave);
+  font-size: var(--texto-chico);
+}
+
+/* Buscador */
+.buscador label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--esp-1);
+}
+
+.buscador input {
+  width: 100%;
+  padding: var(--esp-2) var(--esp-3);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  font-size: var(--texto-base);
+
+  &:focus {
+    outline: 2px solid var(--color-primario);
+    border-color: transparent;
+  }
+}
+
+.resultados {
+  list-style: none;
+  margin: var(--esp-2) 0 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--esp-2);
+    padding: var(--esp-2) 0;
+    border-top: 1px solid var(--color-borde);
+  }
+}
+
+.resultado-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.resultado-nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resultado-marca {
+  font-size: var(--texto-chico);
+  color: var(--color-tinta-suave);
+}
+
+.agregar {
+  border: none;
+  border-radius: 999px;
+  padding: var(--esp-1) var(--esp-3);
+  background: var(--color-primario);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Items de la lista */
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--esp-2);
+    padding: var(--esp-2) 0;
+    border-bottom: 1px solid var(--color-borde);
+  }
+}
+
+.item-nombre {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-1);
+
+  button {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 50%;
+    background: var(--color-superficie);
+    font-size: 1.1rem;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+
+  .cantidad {
+    min-width: 2rem;
+    text-align: center;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.quitar {
+  border: none;
+  background: none;
+  color: var(--color-tinta-suave);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.limpiar {
+  margin-top: var(--esp-2);
+  border: none;
+  background: none;
+  color: var(--color-error);
+  cursor: pointer;
+  font-size: var(--texto-chico);
+  padding: 0;
+}
+
+/* Chips de cadenas */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+}
+
+.chip {
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  padding: var(--esp-1) var(--esp-3);
+  background: var(--color-superficie);
+  color: var(--color-tinta-suave);
+  cursor: pointer;
+
+  &.elegida {
+    background: var(--color-primario-suave);
+    border-color: var(--color-primario);
+    color: var(--color-primario);
+    font-weight: 600;
+  }
+}
+
+/* CTA */
+.cta {
+  position: sticky;
+  bottom: var(--esp-3);
+  display: flex;
+  justify-content: center;
+}
+
+.boton-principal {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  background: var(--color-primario);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: var(--esp-3);
+  border-radius: var(--radio);
+  text-decoration: none;
+  box-shadow: var(--sombra);
+
+  &.deshabilitado {
+    background: var(--color-borde);
+    color: var(--color-tinta-suave);
+    cursor: default;
+    pointer-events: none;
+  }
+}

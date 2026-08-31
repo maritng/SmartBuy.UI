@@ -1,0 +1,90 @@
+<div class="encabezado">
+  <a routerLink="/lista" class="volver">← Volver a mi lista</a>
+  <h1>Tu compra, resuelta</h1>
+</div>
+
+@switch (estado()) {
+  @case ('sin-lista') {
+    <div class="tarjeta">
+      <p>Tu lista está vacía.</p>
+      <a routerLink="/lista" class="boton-principal">Armar mi lista</a>
+    </div>
+  }
+  @case ('cargando') {
+    <div class="tarjeta esqueleto-totales" aria-hidden="true"></div>
+    <div class="tarjeta esqueleto-grupo" aria-hidden="true"></div>
+    <div class="tarjeta esqueleto-grupo" aria-hidden="true"></div>
+  }
+  @case ('error') {
+    <div class="mensaje-error">
+      @for (error of errores(); track error) {
+        <p>{{ error }}</p>
+      }
+      <button type="button" class="reintentar" (click)="resolver()">Reintentar</button>
+    </div>
+  }
+  @case ('ok') {
+    @if (resumen(); as datos) {
+      <section class="tarjeta totales">
+        <div class="total-principal">
+          <span class="etiqueta">Total repartiendo en {{ datos.totales.cadenasInvolucradas }}
+            {{ datos.totales.cadenasInvolucradas === 1 ? 'cadena' : 'cadenas' }}</span>
+          <span class="monto">{{ datos.totales.totalOptimizado | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
+        </div>
+
+        @if (datos.totales.mejorCadenaUnica; as unica) {
+          <div class="comparacion">
+            <span>Todo en {{ unica.cadena }}: {{ unica.total | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
+            @if (datos.totales.ahorro !== null && datos.totales.ahorro > 0) {
+              <span class="ahorro">Ahorrás {{ datos.totales.ahorro | currency: 'ARS' : 'symbol' : '1.0-2' }} 🎉</span>
+            } @else {
+              <span class="ahorro-neutro">Mismo total: un solo súper te alcanza.</span>
+            }
+          </div>
+        } @else {
+          <p class="pista">Ninguna cadena tiene todos los productos: el reparto es la única opción.</p>
+        }
+      </section>
+
+      @for (grupo of grupos(); track grupo.cadenaId) {
+        <section class="tarjeta grupo">
+          <header>
+            <h2>{{ grupo.cadena }}</h2>
+            <span class="subtotal">{{ grupo.subtotal | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
+          </header>
+          <ul>
+            @for (item of grupo.items; track item.productoId) {
+              <li>
+                <div class="item-detalle">
+                  <span class="item-nombre">{{ item.producto }}</span>
+                  <span class="item-meta">
+                    {{ item.cantidad }} × {{ item.precioUnitario | currency: 'ARS' : 'symbol' : '1.0-2' }}
+                    · comparado en {{ item.cadenasComparadas }}
+                    {{ item.cadenasComparadas === 1 ? 'cadena' : 'cadenas' }}
+                    · precio del {{ item.fechaPrecio | date: 'dd/MM' }}
+                  </span>
+                  @if (item.tipoOferta) {
+                    <span class="oferta">🏷️ {{ item.tipoOferta }}</span>
+                  }
+                </div>
+                <span class="item-subtotal">{{ item.subtotal | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (datos.noDisponibles.length > 0) {
+        <section class="tarjeta no-disponibles">
+          <h2>Sin precios todavía</h2>
+          <p class="pista">Estos productos están en el catálogo pero ningún bot capturó su precio aún (o no están en tus cadenas elegidas):</p>
+          <ul>
+            @for (nd of datos.noDisponibles; track nd.productoId) {
+              <li>{{ nd.producto }}</li>
+            }
+          </ul>
+        </section>
+      }
+    }
+  }
+}

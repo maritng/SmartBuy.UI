@@ -1,0 +1,91 @@
+<h1>Mi lista de compras</h1>
+
+<section class="tarjeta buscador">
+  <label for="busqueda">Buscar producto</label>
+  <input
+    id="busqueda"
+    type="search"
+    placeholder="Ej: coca cola, yerba, fideos…"
+    [value]="termino()"
+    (input)="buscar($any($event.target).value)"
+    autocomplete="off"
+  />
+
+  @if (buscando()) {
+    <p class="pista">Buscando…</p>
+  } @else if (errorBusqueda()) {
+    <p class="mensaje-error">{{ errorBusqueda() }}</p>
+  } @else if (termino().trim().length >= 2 && resultados().length === 0) {
+    <p class="pista">Sin resultados en el catálogo para "{{ termino() }}".</p>
+  }
+
+  @if (resultados().length > 0) {
+    <ul class="resultados">
+      @for (producto of resultados(); track producto.id) {
+        <li>
+          <div class="resultado-info">
+            <span class="resultado-nombre">{{ producto.nombre }}</span>
+            @if (producto.marca) {
+              <span class="resultado-marca">{{ producto.marca }}</span>
+            }
+          </div>
+          <button type="button" class="agregar" (click)="agregar(producto)">
+            {{ enLista(producto.id) ? '+1' : 'Agregar' }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+<section class="tarjeta">
+  <h2>Productos ({{ store.cantidadTotal() }})</h2>
+
+  @if (store.vacia()) {
+    <p class="pista">Tu lista está vacía: buscá arriba y agregá productos.</p>
+  } @else {
+    <ul class="items">
+      @for (item of store.items(); track item.productoId) {
+        <li>
+          <span class="item-nombre">{{ item.nombre }}</span>
+          <span class="stepper">
+            <button type="button" (click)="store.cambiarCantidad(item.productoId, -1)" [disabled]="item.cantidad <= 1" aria-label="Restar uno">−</button>
+            <span class="cantidad">{{ item.cantidad }}</span>
+            <button type="button" (click)="store.cambiarCantidad(item.productoId, 1)" aria-label="Sumar uno">+</button>
+          </span>
+          <button type="button" class="quitar" (click)="store.quitar(item.productoId)" aria-label="Quitar de la lista">✕</button>
+        </li>
+      }
+    </ul>
+    <button type="button" class="limpiar" (click)="store.limpiar()">Vaciar lista</button>
+  }
+</section>
+
+@if (cadenas().length > 0) {
+  <section class="tarjeta">
+    <h2>Mis cadenas</h2>
+    <p class="pista">Destildá las que no tengas cerca: la recomendación solo va a usar las elegidas.</p>
+    <div class="chips">
+      @for (cadena of cadenas(); track cadena.id) {
+        <button
+          type="button"
+          class="chip"
+          [class.elegida]="store.cadenaSeleccionada(cadena.id)"
+          (click)="store.toggleCadena(cadena.id, idsDeCadenas())"
+        >
+          {{ cadena.nombre }}
+        </button>
+      }
+    </div>
+  </section>
+}
+
+<div class="cta">
+  <a
+    class="boton-principal"
+    [class.deshabilitado]="store.vacia()"
+    [routerLink]="store.vacia() ? null : '/lista/resultado'"
+  >
+    ¿Dónde me conviene comprar?
+  </a>
+</div>
