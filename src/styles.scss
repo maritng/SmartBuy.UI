@@ -1,1 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================================================
+   SmartBuy - Estilos globales y design tokens.
+   Identidad: comparador de precios -> fondo claro, verde-ahorro como acento,
+   números protagonistas. Mobile-first: los componentes parten del layout de
+   celular y se expanden con media queries min-width.
+   ============================================================================ */
+
+:root {
+  /* Color */
+  --color-fondo: #f6f7f5;
+  --color-superficie: #ffffff;
+  --color-tinta: #1d2321;
+  --color-tinta-suave: #5c6662;
+  --color-borde: #e2e6e2;
+  --color-primario: #0e7b4b;      /* verde ahorro */
+  --color-primario-suave: #e3f1e9;
+  --color-acento: #ffd84d;        /* amarillo etiqueta de precio */
+  --color-error: #b3261e;
+  --color-error-suave: #fdeceb;
+
+  /* Tipografía */
+  --fuente: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --texto-base: 1rem;
+  --texto-chico: 0.85rem;
+  --texto-titulo: 1.35rem;
+  --texto-numero-grande: 2rem;
+
+  /* Espaciado y forma */
+  --esp-1: 0.25rem;
+  --esp-2: 0.5rem;
+  --esp-3: 1rem;
+  --esp-4: 1.5rem;
+  --esp-5: 2.5rem;
+  --radio: 10px;
+  --sombra: 0 1px 3px rgba(29, 35, 33, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-fondo);
+  color: var(--color-tinta);
+  font-family: var(--fuente);
+  font-size: var(--texto-base);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--esp-3);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-primario);
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Utilidades mínimas compartidas */
+.tarjeta {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: var(--esp-3);
+}
+
+.mensaje-error {
+  background: var(--color-error-suave);
+  color: var(--color-error);
+  border-radius: var(--radio);
+  padding: var(--esp-2) var(--esp-3);
+}

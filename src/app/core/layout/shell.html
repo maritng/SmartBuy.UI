@@ -1,0 +1,25 @@
+<header class="barra">
+  <div class="marca">
+    <span class="marca-icono">🛒</span>
+    <span class="marca-nombre">SmartBuy</span>
+  </div>
+
+  <nav class="navegacion" aria-label="Secciones">
+    @for (seccion of secciones; track seccion.ruta) {
+      @if (seccion.disponible) {
+        <a [routerLink]="seccion.ruta" routerLinkActive="activo" class="nav-item">
+          {{ seccion.etiqueta }}
+        </a>
+      } @else {
+        <span class="nav-item proximamente" [attr.aria-disabled]="true">
+          {{ seccion.etiqueta }}
+          <small>pronto</small>
+        </span>
+      }
+    }
+  </nav>
+</header>
+
+<main class="contenido">
+  <router-outlet />
+</main>

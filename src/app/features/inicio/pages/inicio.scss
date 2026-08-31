@@ -1,0 +1,67 @@
+.hero {
+  margin-bottom: var(--esp-4);
+
+  h1 {
+    font-size: var(--texto-titulo);
+    color: var(--color-primario);
+  }
+
+  p {
+    color: var(--color-tinta-suave);
+    max-width: 60ch;
+    margin: 0;
+  }
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-3);
+}
+
+.cadena h3 {
+  margin-bottom: var(--esp-1);
+  font-size: 1.05rem;
+}
+
+.cadena a {
+  font-size: var(--texto-chico);
+}
+
+.esqueleto {
+  min-height: 4.5rem;
+  background: linear-gradient(90deg, var(--color-borde) 25%, var(--color-superficie) 50%, var(--color-borde) 75%);
+  background-size: 200% 100%;
+  animation: brillo 1.2s infinite;
+  border: none;
+}
+
+@keyframes brillo {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.vacio {
+  color: var(--color-tinta-suave);
+}
+
+.reintentar {
+  margin-top: var(--esp-2);
+  border: none;
+  border-radius: var(--radio);
+  padding: var(--esp-1) var(--esp-3);
+  background: var(--color-error);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Tablet y desktop */
+@media (min-width: 560px) {
+  .grilla {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  }
+
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+}

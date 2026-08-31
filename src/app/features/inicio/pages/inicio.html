@@ -1,0 +1,45 @@
+<section class="hero">
+  <h1>Tu compra, repartida donde más conviene</h1>
+  <p>
+    SmartBuy compara los precios que sus bots capturan todos los días en los
+    supermercados y te dice dónde comprar cada producto de tu lista.
+  </p>
+</section>
+
+<section class="cadenas">
+  <h2>Cadenas monitoreadas</h2>
+
+  @switch (estado()) {
+    @case ('cargando') {
+      <div class="grilla">
+        @for (esqueleto of [1, 2, 3, 4, 5, 6, 7]; track esqueleto) {
+          <div class="tarjeta esqueleto" aria-hidden="true"></div>
+        }
+      </div>
+    }
+    @case ('error') {
+      <div class="mensaje-error">
+        @for (error of errores(); track error) {
+          <p>{{ error }}</p>
+        }
+        <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+      </div>
+    }
+    @case ('ok') {
+      @if (cadenas().length === 0) {
+        <p class="vacio">Todavía no hay cadenas cargadas.</p>
+      } @else {
+        <div class="grilla">
+          @for (cadena of cadenas(); track cadena.id) {
+            <article class="tarjeta cadena">
+              <h3>{{ cadena.nombre }}</h3>
+              @if (cadena.sitioWeb) {
+                <a [href]="cadena.sitioWeb" target="_blank" rel="noopener">Sitio oficial</a>
+              }
+            </article>
+          }
+        </div>
+      }
+    }
+  }
+</section>
