@@ -1,0 +1,82 @@
+<div class="encabezado">
+  <h1>Cola de matching</h1>
+  <select class="filtro-cadena" (change)="filtrarPorCadena($any($event.target).value)" aria-label="Filtrar por cadena">
+    <option value="">Todas las cadenas</option>
+    @for (cadena of cadenas(); track cadena.id) {
+      <option [value]="cadena.id">{{ cadena.nombre }}</option>
+    }
+  </select>
+</div>
+
+<p class="pista">
+  Publicaciones capturadas por los bots que todavía no apuntan a ningún producto del catálogo.
+  Matchealas con su producto, o descartá las que no interese comparar.
+</p>
+
+@if (aviso(); as texto) {
+  <p class="banner">{{ texto }}</p>
+}
+
+<div class="tarjeta">
+  @switch (estado()) {
+    @case ('cargando') {
+      <div class="esqueleto" aria-hidden="true"></div>
+    }
+    @case ('error') {
+      <div class="mensaje-error">
+        @for (error of errores(); track error) {
+          <p>{{ error }}</p>
+        }
+        <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+      </div>
+    }
+    @case ('ok') {
+      @if (filas().length === 0) {
+        <p class="vacio">No hay pendientes 🎉 — todo lo capturado está matcheado o descartado.</p>
+      } @else {
+        <ul class="lista">
+          @for (fila of filas(); track fila.id) {
+            <li>
+              <div class="info">
+                <span class="nombre">{{ fila.nombrePublicado }}</span>
+                <span class="meta">
+                  {{ fila.cadena }}
+                  @if (fila.eanPublicado) { · EAN {{ fila.eanPublicado }} }
+                  · en cola desde el {{ fila.fechaCreacion | date: 'dd/MM' }}
+                </span>
+                @if (fila.ultimoPrecioLista !== null) {
+                  <span class="precio">
+                    Último precio: {{ (fila.ultimoPrecioOferta ?? fila.ultimoPrecioLista) | currency: 'ARS' : 'symbol' : '1.0-2' }}
+                    @if (fila.ultimaFechaPrecio) { ({{ fila.ultimaFechaPrecio | date: 'dd/MM' }}) }
+                  </span>
+                }
+              </div>
+              <div class="acciones">
+                <button type="button" class="boton-principal" [disabled]="resolviendo() === fila.id" (click)="abrirMatcheo(fila)">
+                  Matchear
+                </button>
+                <button type="button" class="boton-descartar" [disabled]="resolviendo() === fila.id" (click)="descartar(fila)">
+                  Descartar
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+
+        <div class="paginacion">
+          <button type="button" [disabled]="!hayAnterior()" (click)="irA(-1)">← Anterior</button>
+          <span>{{ desde() }}–{{ hasta() }} de {{ total() }}</span>
+          <button type="button" [disabled]="!haySiguiente()" (click)="irA(1)">Siguiente →</button>
+        </div>
+      }
+    }
+  }
+</div>
+
+@if (matcheando(); as publicacion) {
+  <app-matchear-modal
+    [publicacion]="publicacion"
+    (confirmar)="confirmarMatcheo($event)"
+    (cerrar)="matcheando.set(null)"
+  />
+}

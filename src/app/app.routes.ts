@@ -25,6 +25,10 @@ export const routes: Routes = [
     path: 'catalogo/:id',
     loadComponent: () => import('./features/catalogo/pages/producto-form').then((m) => m.ProductoForm)
   },
+  {
+    path: 'matching',
+    loadComponent: () => import('./features/matching/pages/pendientes').then((m) => m.Pendientes)
+  },
   { path: '', pathMatch: 'full', redirectTo: 'lista' },
   { path: '**', redirectTo: 'lista' }
 ];

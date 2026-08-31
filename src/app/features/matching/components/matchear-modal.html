@@ -1,0 +1,62 @@
+<div class="fondo" (click)="cerrar.emit()" role="presentation"></div>
+
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal">
+  <header>
+    <h2 id="titulo-modal">Matchear publicación</h2>
+    <button type="button" class="cerrar" (click)="cerrar.emit()" aria-label="Cerrar">✕</button>
+  </header>
+
+  <div class="publicacion">
+    <span class="etiqueta">{{ publicacion().cadena }} publica:</span>
+    <strong>{{ publicacion().nombrePublicado }}</strong>
+    @if (publicacion().eanPublicado) {
+      <span class="ean">EAN {{ publicacion().eanPublicado }}</span>
+    }
+  </div>
+
+  <label for="buscar-producto">¿Qué producto del catálogo es?</label>
+  <input
+    id="buscar-producto"
+    type="search"
+    placeholder="Buscar por nombre, marca o EAN…"
+    [value]="termino()"
+    (input)="buscar($any($event.target).value)"
+    autocomplete="off"
+  />
+
+  @if (buscando()) {
+    <p class="pista">Buscando…</p>
+  } @else if (error()) {
+    <p class="mensaje-error">{{ error() }}</p>
+  } @else if (termino().trim().length >= 2 && resultados().length === 0) {
+    <p class="pista">Sin resultados. Si el producto no existe, crealo primero desde el Catálogo.</p>
+  }
+
+  @if (resultados().length > 0) {
+    <ul class="resultados">
+      @for (producto of resultados(); track producto.id) {
+        <li>
+          <button
+            type="button"
+            class="opcion"
+            [class.elegida]="seleccionado()?.id === producto.id"
+            (click)="elegir(producto)"
+          >
+            <span class="opcion-nombre">{{ producto.nombre }}</span>
+            <span class="opcion-detalle">
+              @if (producto.marca) { {{ producto.marca }} · }
+              @if (producto.ean) { EAN {{ producto.ean }} } @else { sin EAN }
+            </span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  <footer>
+    <button type="button" class="boton-secundario" (click)="cerrar.emit()">Cancelar</button>
+    <button type="button" class="boton-principal" [disabled]="!seleccionado()" (click)="confirmarSeleccion()">
+      Matchear
+    </button>
+  </footer>
+</div>
