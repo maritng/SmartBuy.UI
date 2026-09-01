@@ -59,6 +59,9 @@
                   <span class="item-nombre">{{ item.producto }}</span>
                   <span class="item-meta">
                     {{ item.cantidad }} × {{ item.precioUnitario | currency: 'ARS' : 'symbol' : '1.0-2' }}
+                    @if (item.precioPorUnidad !== null) {
+                      ({{ item.precioPorUnidad | currency: 'ARS' : 'symbol' : '1.0-2' }}/{{ item.unidadBase }})
+                    }
                     · comparado en {{ item.cadenasComparadas }}
                     {{ item.cadenasComparadas === 1 ? 'cadena' : 'cadenas' }}
                     · precio del {{ item.fechaPrecio | date: 'dd/MM' }}

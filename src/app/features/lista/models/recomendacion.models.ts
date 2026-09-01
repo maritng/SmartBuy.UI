@@ -21,6 +21,9 @@ export interface RecomendacionItem {
   precioUnitario: number;
   tipoOferta: string | null;
   fechaPrecio: string;
+  /** Precio normalizado por unidad base ($/L, $/kg, $/un); null sin contenido cargado. */
+  precioPorUnidad: number | null;
+  unidadBase: string | null;
   subtotal: number;
   cadenasComparadas: number;
 }
