@@ -22,7 +22,8 @@ export class Shell {
     { ruta: '/inicio', etiqueta: 'Inicio', disponible: true },
     { ruta: '/lista', etiqueta: 'Mi lista', disponible: true },
     { ruta: '/catalogo', etiqueta: 'Catálogo', disponible: true },
-    { ruta: '/matching', etiqueta: 'Matching', disponible: true }
+    { ruta: '/matching', etiqueta: 'Matching', disponible: true },
+    { ruta: '/capturas', etiqueta: 'Capturas', disponible: true }
   ];
 
   protected salir(): void {

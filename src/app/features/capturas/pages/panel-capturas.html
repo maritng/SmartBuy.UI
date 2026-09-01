@@ -1,0 +1,67 @@
+<div class="encabezado">
+  <h1>Capturas</h1>
+  <button type="button" class="actualizar" (click)="cargar()" [disabled]="estado() === 'cargando'">
+    Actualizar
+  </button>
+</div>
+
+<p class="pista">
+  La bitácora de los bots: qué corrió, cuándo, cuántos precios trajo y cuánto tardó.
+  Las capturas se disparan solas una vez por día por cadena.
+</p>
+
+<div class="tarjeta">
+  @switch (estado()) {
+    @case ('cargando') {
+      <div class="esqueleto" aria-hidden="true"></div>
+    }
+    @case ('error') {
+      <div class="mensaje-error">
+        @for (error of errores(); track error) {
+          <p>{{ error }}</p>
+        }
+        <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+      </div>
+    }
+    @case ('ok') {
+      @if (filas().length === 0) {
+        <p class="vacio">Todavía no hay capturas registradas. Los bots van a dejar acá su bitácora.</p>
+      } @else {
+        <ul class="lista">
+          @for (fila of filas(); track fila.id) {
+            <li>
+              <div class="fila-principal">
+                <div class="info">
+                  <span class="nombre">
+                    {{ fila.cadena }}
+                    <span class="chip" [class]="'chip-' + fila.estado">
+                      @switch (fila.estado) {
+                        @case ('ok') { OK }
+                        @case ('error') { Error }
+                        @case ('en_proceso') { En proceso }
+                      }
+                    </span>
+                  </span>
+                  <span class="meta">
+                    #{{ fila.id }} · {{ fila.fechaInicio | date: 'dd/MM HH:mm' }}
+                    @if (fila.cantItems !== null) { · {{ fila.cantItems | number }} ítems }
+                    @if (duracion(fila); as tiempo) { · {{ tiempo }} }
+                    · fuente {{ fila.fuente }}
+                  </span>
+                </div>
+                @if (fila.errorDetalle) {
+                  <button type="button" class="ver-detalle" (click)="alternarDetalle(fila.id)">
+                    {{ detalleAbierto() === fila.id ? 'Ocultar detalle' : 'Ver detalle' }}
+                  </button>
+                }
+              </div>
+              @if (fila.errorDetalle && detalleAbierto() === fila.id) {
+                <p class="detalle-error">{{ fila.errorDetalle }}</p>
+              }
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+</div>

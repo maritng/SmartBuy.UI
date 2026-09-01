@@ -31,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/matching/pages/pendientes').then((m) => m.Pendientes)
   },
   {
+    path: 'capturas',
+    loadComponent: () => import('./features/capturas/pages/panel-capturas').then((m) => m.PanelCapturas)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/auth/pages/login').then((m) => m.Login)
   },
