@@ -1,0 +1,43 @@
+<div class="encabezado">
+  <h1>Mis listas</h1>
+  <button type="button" class="boton-principal" (click)="nuevaLista()">+ Nueva lista</button>
+</div>
+
+<div class="tarjeta">
+  @switch (estado()) {
+    @case ('cargando') {
+      <div class="esqueleto" aria-hidden="true"></div>
+    }
+    @case ('error') {
+      <div class="mensaje-error">
+        @for (error of errores(); track error) {
+          <p>{{ error }}</p>
+        }
+        <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+      </div>
+    }
+    @case ('ok') {
+      @if (listas().length === 0) {
+        <p class="vacio">
+          Todavía no guardaste ninguna lista. Armá tu changuito en
+          <a routerLink="/lista">Mi lista</a> y usá "Guardar como…".
+        </p>
+      } @else {
+        <ul class="listado">
+          @for (lista of listas(); track lista.id) {
+            <li>
+              <button type="button" class="abrir" [disabled]="abriendo() === lista.id" (click)="abrir(lista)">
+                <span class="nombre">{{ lista.nombre }}</span>
+                <span class="meta">
+                  {{ lista.cantItems }} {{ lista.cantItems === 1 ? 'producto' : 'productos' }}
+                  · {{ lista.fecha | date: 'dd/MM/yyyy' }}
+                </span>
+              </button>
+              <button type="button" class="eliminar" title="Eliminar" (click)="eliminar(lista)">🗑️</button>
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+</div>

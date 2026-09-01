@@ -1,0 +1,65 @@
+.auth {
+  max-width: 400px;
+  margin: var(--esp-4) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+
+  h1 {
+    font-size: var(--texto-titulo);
+    margin: 0;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+
+  label {
+    font-weight: 600;
+    font-size: var(--texto-chico);
+  }
+
+  input {
+    padding: var(--esp-2);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    font-size: var(--texto-base);
+
+    &:focus {
+      outline: 2px solid var(--color-primario);
+      border-color: transparent;
+    }
+  }
+}
+
+.boton-principal {
+  border: none;
+  background: var(--color-primario);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: var(--esp-3);
+  border-radius: var(--radio);
+  cursor: pointer;
+
+  &:disabled {
+    background: var(--color-borde);
+    color: var(--color-tinta-suave);
+    cursor: default;
+  }
+}
+
+.alternativa {
+  font-size: var(--texto-chico);
+  color: var(--color-tinta-suave);
+  margin: 0;
+  text-align: center;
+}

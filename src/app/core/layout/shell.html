@@ -4,6 +4,15 @@
     <span class="marca-nombre">SmartBuy</span>
   </div>
 
+  <div class="sesion">
+    @if (auth.usuario(); as usuario) {
+      <a routerLink="/listas" class="sesion-nombre">Hola, {{ usuario.nombre }}</a>
+      <button type="button" class="salir" (click)="salir()">Salir</button>
+    } @else {
+      <a routerLink="/login" class="ingresar">Ingresar</a>
+    }
+  </div>
+
   <nav class="navegacion" aria-label="Secciones">
     @for (seccion of secciones; track seccion.ruta) {
       @if (seccion.disponible) {

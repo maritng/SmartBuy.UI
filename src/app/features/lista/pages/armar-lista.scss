@@ -18,6 +18,73 @@ h2 {
   font-size: var(--texto-chico);
 }
 
+/* Barra de guardado (solo logueado) */
+.guardado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+.guardado-info {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--esp-2);
+  flex-wrap: wrap;
+
+  a {
+    font-size: var(--texto-chico);
+    white-space: nowrap;
+  }
+}
+
+.guardado-acciones {
+  display: flex;
+  gap: var(--esp-2);
+  flex-wrap: wrap;
+}
+
+.boton-secundario {
+  border: 1px solid var(--color-primario);
+  background: var(--color-superficie);
+  color: var(--color-primario);
+  font-weight: 600;
+  padding: var(--esp-1) var(--esp-3);
+  border-radius: var(--radio);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.guardar-como {
+  display: flex;
+  gap: var(--esp-2);
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--esp-2);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    font-size: var(--texto-base);
+
+    &:focus {
+      outline: 2px solid var(--color-primario);
+      border-color: transparent;
+    }
+  }
+}
+
+.aviso {
+  margin: 0;
+  font-size: var(--texto-chico);
+  font-weight: 600;
+  color: var(--color-primario);
+}
+
 /* Buscador */
 .buscador label {
   display: block;

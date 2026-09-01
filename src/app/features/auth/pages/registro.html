@@ -1,0 +1,34 @@
+<div class="tarjeta auth">
+  <h1>Crear cuenta</h1>
+
+  <form (submit)="$event.preventDefault(); crearCuenta()">
+    <div class="campo">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" autocomplete="name" maxlength="100" [value]="nombre()" (input)="nombre.set($any($event.target).value)" required />
+    </div>
+
+    <div class="campo">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" [value]="email()" (input)="email.set($any($event.target).value)" required />
+    </div>
+
+    <div class="campo">
+      <label for="password">Contraseña (mínimo 6 caracteres)</label>
+      <input id="password" type="password" autocomplete="new-password" [value]="password()" (input)="password.set($any($event.target).value)" required />
+    </div>
+
+    @if (errores().length > 0) {
+      <div class="mensaje-error">
+        @for (error of errores(); track error) {
+          <p>{{ error }}</p>
+        }
+      </div>
+    }
+
+    <button type="submit" class="boton-principal" [disabled]="enviando() || !nombre().trim() || !email().trim() || password().length < 6">
+      {{ enviando() ? 'Creando…' : 'Crear cuenta' }}
+    </button>
+  </form>
+
+  <p class="alternativa">¿Ya tenés cuenta? <a routerLink="/login">Ingresá acá</a></p>
+</div>

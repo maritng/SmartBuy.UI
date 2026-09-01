@@ -10,6 +10,8 @@ export interface ItemLista {
 interface ListaPersistida {
   items: ItemLista[];
   cadenasIds: number[] | null;
+  listaActivaId?: number | null;
+  listaActivaNombre?: string | null;
 }
 
 const STORAGE_KEY = 'smartbuy.lista.v1';
@@ -26,6 +28,10 @@ export class ListaStore {
   readonly items = signal<ItemLista[]>([]);
   readonly cadenasIds = signal<number[] | null>(null);
 
+  /** Lista guardada del servidor sobre la que se está trabajando (null = borrador local). */
+  readonly listaActivaId = signal<number | null>(null);
+  readonly listaActivaNombre = signal<string | null>(null);
+
   readonly cantidadTotal = computed(() => this.items().reduce((suma, item) => suma + item.cantidad, 0));
   readonly vacia = computed(() => this.items().length === 0);
 
@@ -34,7 +40,12 @@ export class ListaStore {
 
     // Persistencia automática: cualquier cambio de items o cadenas se guarda.
     effect(() => {
-      const estado: ListaPersistida = { items: this.items(), cadenasIds: this.cadenasIds() };
+      const estado: ListaPersistida = {
+        items: this.items(),
+        cadenasIds: this.cadenasIds(),
+        listaActivaId: this.listaActivaId(),
+        listaActivaNombre: this.listaActivaNombre()
+      };
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
       } catch {
@@ -71,6 +82,24 @@ export class ListaStore {
 
   limpiar(): void {
     this.items.set([]);
+    this.cerrarListaActiva();
+  }
+
+  /** Carga una lista guardada del servidor al changuito y la deja como activa. */
+  abrirLista(id: number, nombre: string, items: { productoId: number; producto: string; cantidad: number }[]): void {
+    this.items.set(items.map((i) => ({ productoId: i.productoId, nombre: i.producto, cantidad: i.cantidad })));
+    this.listaActivaId.set(id);
+    this.listaActivaNombre.set(nombre);
+  }
+
+  marcarComoActiva(id: number, nombre: string): void {
+    this.listaActivaId.set(id);
+    this.listaActivaNombre.set(nombre);
+  }
+
+  cerrarListaActiva(): void {
+    this.listaActivaId.set(null);
+    this.listaActivaNombre.set(null);
   }
 
   /**
@@ -106,6 +135,8 @@ export class ListaStore {
       const estado = JSON.parse(crudo) as ListaPersistida;
       this.items.set(Array.isArray(estado.items) ? estado.items : []);
       this.cadenasIds.set(Array.isArray(estado.cadenasIds) ? estado.cadenasIds : null);
+      this.listaActivaId.set(estado.listaActivaId ?? null);
+      this.listaActivaNombre.set(estado.listaActivaNombre ?? null);
     } catch {
       // Storage corrupto o inaccesible: se arranca con lista vacía.
     }

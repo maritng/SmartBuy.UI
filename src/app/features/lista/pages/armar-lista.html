@@ -1,5 +1,48 @@
 <h1>Mi lista de compras</h1>
 
+@if (auth.logueado()) {
+  <section class="tarjeta guardado">
+    <div class="guardado-info">
+      @if (store.listaActivaNombre(); as nombre) {
+        <span>Trabajando sobre <strong>{{ nombre }}</strong></span>
+      } @else {
+        <span class="pista">Borrador local (no guardado en tu cuenta)</span>
+      }
+      <a routerLink="/listas">Mis listas</a>
+    </div>
+
+    <div class="guardado-acciones">
+      @if (store.listaActivaId() !== null) {
+        <button type="button" class="boton-secundario" [disabled]="guardando() || store.vacia()" (click)="guardar()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      }
+      <button type="button" class="boton-secundario" [disabled]="guardando()" (click)="mostrarGuardarComo.set(!mostrarGuardarComo())">
+        Guardar como…
+      </button>
+    </div>
+
+    @if (mostrarGuardarComo()) {
+      <div class="guardar-como">
+        <input
+          type="text"
+          placeholder="Nombre de la lista (ej: Compra mensual)"
+          maxlength="100"
+          [value]="nombreNuevaLista()"
+          (input)="nombreNuevaLista.set($any($event.target).value)"
+        />
+        <button type="button" class="boton-secundario" [disabled]="guardando() || !nombreNuevaLista().trim()" (click)="guardarComo()">
+          Crear
+        </button>
+      </div>
+    }
+
+    @if (avisoGuardado(); as aviso) {
+      <p class="aviso">{{ aviso }}</p>
+    }
+  </section>
+}
+
 <section class="tarjeta buscador">
   <label for="busqueda">Buscar producto</label>
   <input
@@ -71,7 +114,7 @@
           type="button"
           class="chip"
           [class.elegida]="store.cadenaSeleccionada(cadena.id)"
-          (click)="store.toggleCadena(cadena.id, idsDeCadenas())"
+          (click)="alternarCadena(cadena.id)"
         >
           {{ cadena.nombre }}
         </button>

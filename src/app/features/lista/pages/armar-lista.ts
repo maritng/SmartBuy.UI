@@ -6,6 +6,8 @@ import { Cadena } from '../../../core/api/cadena.model';
 import { CadenasService } from '../../../core/api/cadenas.service';
 import { ProductoListado } from '../../../core/api/producto.model';
 import { ProductosService } from '../../../core/api/productos.service';
+import { AuthStore } from '../../../core/auth/auth.store';
+import { ListasApiService } from '../data-access/listas-api.service';
 import { ListaStore } from '../state/lista.store';
 
 /**
@@ -24,6 +26,8 @@ export class ArmarLista {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly store = inject(ListaStore);
+  protected readonly auth = inject(AuthStore);
+  private readonly listasApi = inject(ListasApiService);
 
   protected readonly termino = signal('');
   protected readonly resultados = signal<ProductoListado[]>([]);
@@ -31,6 +35,11 @@ export class ArmarLista {
   protected readonly errorBusqueda = signal<string | null>(null);
 
   protected readonly cadenas = signal<Cadena[]>([]);
+
+  protected readonly guardando = signal(false);
+  protected readonly avisoGuardado = signal<string | null>(null);
+  protected readonly mostrarGuardarComo = signal(false);
+  protected readonly nombreNuevaLista = signal('');
 
   private readonly busquedas = new Subject<string>();
 
@@ -83,5 +92,77 @@ export class ArmarLista {
 
   protected idsDeCadenas(): number[] {
     return this.cadenas().map((cadena) => cadena.id);
+  }
+
+  /** Toggle de chip + sincronización al servidor si hay sesión. */
+  protected alternarCadena(cadenaId: number): void {
+    this.store.toggleCadena(cadenaId, this.idsDeCadenas());
+
+    if (this.auth.logueado()) {
+      this.listasApi.guardarMisCadenas(this.store.cadenasIds() ?? []).subscribe({
+        error: () => {
+          // Sin drama: la preferencia local sigue; se re-sincroniza al próximo login.
+        }
+      });
+    }
+  }
+
+  /** Guarda sobre la lista activa del servidor. */
+  protected guardar(): void {
+    const id = this.store.listaActivaId();
+    const nombre = this.store.listaActivaNombre();
+    if (id === null || !nombre) {
+      return;
+    }
+
+    this.persistir(this.listasApi.guardarLista(id, nombre, this.itemsParaGuardar()), `"${nombre}" guardada ✓`);
+  }
+
+  /** Crea una lista nueva en el servidor con el changuito actual. */
+  protected guardarComo(): void {
+    const nombre = this.nombreNuevaLista().trim();
+    if (!nombre) {
+      return;
+    }
+
+    this.persistir(
+      this.listasApi.crearLista(nombre, this.itemsParaGuardar()),
+      `"${nombre}" creada ✓`,
+      (id) => {
+        this.store.marcarComoActiva(id, nombre);
+        this.mostrarGuardarComo.set(false);
+        this.nombreNuevaLista.set('');
+      }
+    );
+  }
+
+  private persistir(
+    operacion: ReturnType<ListasApiService['crearLista']>,
+    mensajeOk: string,
+    alExito?: (id: number) => void
+  ): void {
+    this.guardando.set(true);
+    this.avisoGuardado.set(null);
+
+    operacion.subscribe({
+      next: (respuesta) => {
+        this.guardando.set(false);
+        if (respuesta.success && respuesta.result) {
+          alExito?.(respuesta.result.id);
+          this.avisoGuardado.set(mensajeOk);
+        } else {
+          this.avisoGuardado.set(`No se pudo guardar: ${respuesta.errors.join(' ')}`);
+        }
+      },
+      error: (error) => {
+        this.guardando.set(false);
+        const mensajes = error?.error?.errors as string[] | undefined;
+        this.avisoGuardado.set(`No se pudo guardar: ${mensajes?.join(' ') ?? 'falló la conexión.'}`);
+      }
+    });
+  }
+
+  private itemsParaGuardar(): { productoId: number; cantidad: number }[] {
+    return this.store.items().map((i) => ({ productoId: i.productoId, cantidad: i.cantidad }));
   }
 }

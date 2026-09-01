@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,19 @@ export const routes: Routes = [
   {
     path: 'matching',
     loadComponent: () => import('./features/matching/pages/pendientes').then((m) => m.Pendientes)
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/pages/login').then((m) => m.Login)
+  },
+  {
+    path: 'registro',
+    loadComponent: () => import('./features/auth/pages/registro').then((m) => m.Registro)
+  },
+  {
+    path: 'listas',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/lista/pages/mis-listas').then((m) => m.MisListas)
   },
   { path: '', pathMatch: 'full', redirectTo: 'lista' },
   { path: '**', redirectTo: 'lista' }

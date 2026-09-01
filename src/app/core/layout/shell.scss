@@ -18,6 +18,39 @@
   font-weight: 700;
 }
 
+.sesion {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  font-size: var(--texto-chico);
+
+  .sesion-nombre {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--color-primario);
+    white-space: nowrap;
+  }
+
+  .salir {
+    border: none;
+    background: none;
+    color: var(--color-tinta-suave);
+    cursor: pointer;
+    font-size: var(--texto-chico);
+    padding: 0;
+  }
+
+  .ingresar {
+    text-decoration: none;
+    font-weight: 600;
+    background: var(--color-primario-suave);
+    color: var(--color-primario);
+    padding: var(--esp-1) var(--esp-3);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+}
+
 .marca-icono {
   font-size: 1.4rem;
 }
@@ -62,13 +95,32 @@
   margin: 0 auto;
 }
 
-/* Desktop: marca y navegación en una sola fila */
+/* Mobile: marca y sesión en la misma fila, nav abajo */
+.barra {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navegacion {
+  width: 100%;
+}
+
+/* Desktop: todo en una sola fila */
 @media (min-width: 720px) {
   .barra {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-wrap: nowrap;
     padding: var(--esp-2) var(--esp-4);
+  }
+
+  .navegacion {
+    width: auto;
+    order: 0;
+  }
+
+  .sesion {
+    order: 1;
   }
 
   .contenido {
