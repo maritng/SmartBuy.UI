@@ -31,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/matching/pages/pendientes').then((m) => m.Pendientes)
   },
   {
+    path: 'historico/:productoId',
+    loadComponent: () => import('./features/historico/pages/historico-producto').then((m) => m.HistoricoProducto)
+  },
+  {
     path: 'capturas',
     loadComponent: () => import('./features/capturas/pages/panel-capturas').then((m) => m.PanelCapturas)
   },

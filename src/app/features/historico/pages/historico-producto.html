@@ -1,0 +1,113 @@
+<div class="encabezado">
+  <button type="button" class="volver" (click)="volver()">← Volver</button>
+  <h1>{{ datos()?.producto ?? 'Historial de precios' }}</h1>
+</div>
+
+<div class="ventanas" role="group" aria-label="Ventana de tiempo">
+  @for (ventana of ventanas; track ventana) {
+    <button
+      type="button"
+      class="chip-ventana"
+      [class.activa]="dias() === ventana"
+      (click)="cambiarVentana(ventana)"
+    >{{ ventana }} días</button>
+  }
+</div>
+
+@switch (estado()) {
+  @case ('cargando') {
+    <div class="tarjeta"><div class="esqueleto" aria-hidden="true"></div></div>
+  }
+  @case ('error') {
+    <div class="mensaje-error">
+      @for (error of errores(); track error) {
+        <p>{{ error }}</p>
+      }
+      <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+    </div>
+  }
+  @case ('ok') {
+    @if (datos(); as resumen) {
+      <section class="tarjeta senal" [class]="'senal-' + resumen.senal.veredicto">
+        <p class="senal-mensaje">{{ resumen.senal.mensaje }}</p>
+        @if (resumen.senal.precioActual !== null) {
+          <dl class="senal-datos">
+            <div>
+              <dt>Hoy (mejor)</dt>
+              <dd>{{ resumen.senal.precioActual | currency: 'ARS' : 'symbol' : '1.0-2' }}</dd>
+            </div>
+            <div>
+              <dt>Promedio</dt>
+              <dd>{{ resumen.senal.promedio | currency: 'ARS' : 'symbol' : '1.0-2' }}</dd>
+            </div>
+            <div>
+              <dt>Mínimo</dt>
+              <dd>{{ resumen.senal.minimo | currency: 'ARS' : 'symbol' : '1.0-2' }}</dd>
+            </div>
+            <div>
+              <dt>Máximo</dt>
+              <dd>{{ resumen.senal.maximo | currency: 'ARS' : 'symbol' : '1.0-2' }}</dd>
+            </div>
+          </dl>
+        }
+      </section>
+
+      <section class="tarjeta">
+        @if (lineas().length === 0) {
+          <p class="vacio">
+            Ningún bot capturó precios de este producto todavía.
+            En cuanto aparezca en una captura, la historia arranca sola.
+          </p>
+        } @else {
+          <div class="grafico-scroll">
+            <svg
+              [attr.viewBox]="'0 0 ' + ancho + ' ' + alto"
+              class="grafico"
+              role="img"
+              aria-label="Evolución del precio por cadena"
+            >
+              <!-- Grilla + eje Y -->
+              @for (tick of ticksY(); track tick.y) {
+                <line [attr.x1]="60" [attr.x2]="ancho - 8" [attr.y1]="tick.y" [attr.y2]="tick.y" class="grilla" />
+                <text [attr.x]="56" [attr.y]="tick.y + 4" text-anchor="end" class="eje">{{ tick.etiqueta }}</text>
+              }
+
+              <!-- Una línea por cadena; los puntos importan cuando hay pocos días -->
+              @for (linea of lineas(); track linea.cadenaId) {
+                <polyline [attr.points]="linea.trazo" [attr.stroke]="linea.color" class="serie" />
+                @for (punto of linea.puntos; track punto.fecha) {
+                  <circle [attr.cx]="punto.x" [attr.cy]="punto.y" r="3.5" [attr.fill]="linea.color">
+                    <title>{{ linea.cadena }} · {{ punto.fecha.slice(8, 10) }}/{{ punto.fecha.slice(5, 7) }} · $ {{ punto.precio }}</title>
+                  </circle>
+                }
+              }
+
+              <!-- Eje X: primera y última fecha -->
+              @for (etiqueta of etiquetasX(); track etiqueta.x) {
+                <text [attr.x]="etiqueta.x" [attr.y]="yEtiquetasX" [attr.text-anchor]="etiqueta.ancla" class="eje">
+                  {{ etiqueta.texto }}
+                </text>
+              }
+            </svg>
+          </div>
+
+          <ul class="leyenda">
+            @for (linea of lineas(); track linea.cadenaId) {
+              <li>
+                <span class="muestra" [style.background]="linea.color"></span>
+                {{ linea.cadena }}
+                <strong>{{ linea.ultimoPrecio | currency: 'ARS' : 'symbol' : '1.0-2' }}</strong>
+              </li>
+            }
+          </ul>
+
+          <p class="pista">
+            Mejor precio efectivo por día en cada cadena (ofertas por cantidad incluidas),
+            capturado automáticamente por los bots. Ventana: últimos {{ resumen.dias }} días
+            ({{ resumen.senal.diasConDatos }} con datos).
+          </p>
+        }
+      </section>
+    }
+  }
+}

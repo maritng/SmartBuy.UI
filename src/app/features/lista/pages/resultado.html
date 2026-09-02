@@ -56,7 +56,10 @@
             @for (item of grupo.items; track item.productoId) {
               <li>
                 <div class="item-detalle">
-                  <span class="item-nombre">{{ item.producto }}</span>
+                  <span class="item-nombre">
+                    {{ item.producto }}
+                    <a [routerLink]="['/historico', item.productoId]" class="link-historico" title="Historial de precios">📈</a>
+                  </span>
                   <span class="item-meta">
                     {{ item.cantidad }} × {{ item.precioUnitario | currency: 'ARS' : 'symbol' : '1.0-2' }}
                     @if (item.precioPorUnidad !== null) {
