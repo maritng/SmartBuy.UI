@@ -1,0 +1,100 @@
+<div class="encabezado">
+  <h1>Tendencias por categoría</h1>
+  <div class="ventanas" role="group" aria-label="Ventana de tiempo">
+    @for (ventana of ventanas; track ventana) {
+      <button
+        type="button"
+        class="chip-ventana"
+        [class.activa]="dias() === ventana"
+        (click)="cambiarVentana(ventana)"
+      >{{ ventana }} días</button>
+    }
+  </div>
+</div>
+
+<p class="pista">
+  Índice de precios por tipo de producto, base 100 al inicio de la ventana. Cada día compara
+  los mismos productos contra el día anterior (canasta común): mide movimiento de precios puro,
+  con las categorías que etiquetan los propios supermercados.
+</p>
+
+@switch (estado()) {
+  @case ('cargando') {
+    <div class="tarjeta"><div class="esqueleto" aria-hidden="true"></div></div>
+  }
+  @case ('error') {
+    <div class="mensaje-error">
+      @for (error of errores(); track error) {
+        <p>{{ error }}</p>
+      }
+      <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+    </div>
+  }
+  @case ('ok') {
+    @if (datos(); as evolucion) {
+      @if (conDatos().length === 0) {
+        <div class="tarjeta">
+          <p class="vacio">
+            📊 Todavía juntando historia: el índice necesita al menos dos días de capturas
+            etiquetadas por categoría. Los bots ya están en eso — volvé mañana y esto arranca solo.
+          </p>
+        </div>
+      } @else {
+        <div class="tarjeta">
+          <div class="grafico-scroll">
+            <svg
+              [attr.viewBox]="'0 0 ' + ancho + ' ' + alto"
+              class="grafico"
+              role="img"
+              aria-label="Evolución del índice de precios por categoría"
+            >
+              @if (yBase100() !== null) {
+                <line [attr.x1]="50" [attr.x2]="ancho - 8" [attr.y1]="yBase100()" [attr.y2]="yBase100()" class="linea-base" />
+                <text [attr.x]="46" [attr.y]="yBase100()! + 4" text-anchor="end" class="eje">100</text>
+              }
+
+              @for (linea of lineas(); track linea.categoria) {
+                <polyline [attr.points]="linea.trazo" [attr.stroke]="linea.color" class="serie" />
+                @for (punto of linea.puntos; track punto.fecha) {
+                  <circle [attr.cx]="punto.x" [attr.cy]="punto.y" r="3.5" [attr.fill]="linea.color">
+                    <title>{{ linea.categoria }} · {{ punto.fecha.slice(8, 10) }}/{{ punto.fecha.slice(5, 7) }} · índice {{ punto.indice }}</title>
+                  </circle>
+                }
+              }
+
+              @for (etiqueta of etiquetasX(); track etiqueta.x) {
+                <text [attr.x]="etiqueta.x" [attr.y]="yEtiquetasX" [attr.text-anchor]="etiqueta.ancla" class="eje">
+                  {{ etiqueta.texto }}
+                </text>
+              }
+            </svg>
+          </div>
+        </div>
+      }
+
+      <div class="tarjetas-categorias">
+        @for (serie of evolucion.series; track serie.categoria; let i = $index) {
+          <div class="tarjeta tarjeta-categoria">
+            <div class="cabecera-categoria">
+              <span class="muestra" [style.background]="colorDe(i)"></span>
+              <h2>{{ serie.categoria }}</h2>
+              @if (serie.variacionVentana !== null) {
+                <span
+                  class="variacion"
+                  [class.sube]="serie.variacionVentana > 0.5"
+                  [class.baja]="serie.variacionVentana < -0.5"
+                >{{ serie.variacionVentana > 0 ? '+' : '' }}{{ serie.variacionVentana | number: '1.0-1' }}%</span>
+              }
+            </div>
+            <p class="mensaje-categoria">{{ serie.mensaje }}</p>
+            @if (serie.variacionUltimoDia !== null) {
+              <p class="ultimo-dia">
+                Último movimiento: {{ serie.variacionUltimoDia > 0 ? '+' : '' }}{{ serie.variacionUltimoDia | number: '1.0-1' }}%
+              </p>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+}

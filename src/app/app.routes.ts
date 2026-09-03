@@ -31,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/matching/pages/pendientes').then((m) => m.Pendientes)
   },
   {
+    path: 'tendencias',
+    loadComponent: () => import('./features/tendencias/pages/tendencias').then((m) => m.Tendencias)
+  },
+  {
     path: 'historico/:productoId',
     loadComponent: () => import('./features/historico/pages/historico-producto').then((m) => m.HistoricoProducto)
   },
