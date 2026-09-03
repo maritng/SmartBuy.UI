@@ -12,6 +12,8 @@ interface GrupoCadena {
   cadena: string;
   items: RecomendacionItem[];
   subtotal: number;
+  /** Deep link que arma el carrito real del súper con estos ítems (solo VTEX). */
+  carritoUrl: string | null;
 }
 
 /**
@@ -36,10 +38,17 @@ export class Resultado {
 
   protected readonly grupos = computed<GrupoCadena[]>(() => {
     const items = this.resumen()?.items ?? [];
+    const carritos = this.resumen()?.carritos ?? [];
     const porCadena = new Map<number, GrupoCadena>();
 
     for (const item of items) {
-      const grupo = porCadena.get(item.cadenaId) ?? { cadenaId: item.cadenaId, cadena: item.cadena, items: [], subtotal: 0 };
+      const grupo = porCadena.get(item.cadenaId) ?? {
+        cadenaId: item.cadenaId,
+        cadena: item.cadena,
+        items: [],
+        subtotal: 0,
+        carritoUrl: carritos.find((c) => c.cadenaId === item.cadenaId)?.url ?? null
+      };
       grupo.items.push(item);
       grupo.subtotal += item.subtotal;
       porCadena.set(item.cadenaId, grupo);

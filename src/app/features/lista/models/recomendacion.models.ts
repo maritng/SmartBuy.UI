@@ -18,6 +18,10 @@ export interface RecomendacionItem {
   cadenaId: number;
   cadena: string;
   nombrePublicado: string;
+  /** SKU en la cadena elegida (alimenta el deep link de carrito). */
+  codigoExterno: string;
+  /** Página del producto en el sitio de la cadena, si está capturada. */
+  url: string | null;
   precioUnitario: number;
   tipoOferta: string | null;
   fechaPrecio: string;
@@ -46,8 +50,16 @@ export interface RecomendacionTotales {
   ahorro: number | null;
 }
 
+/** Un click que arma el carrito real de la cadena con lo que va ahí (solo VTEX). */
+export interface CarritoCadena {
+  cadenaId: number;
+  cadena: string;
+  url: string;
+}
+
 export interface ListaCompraResumen {
   items: RecomendacionItem[];
   noDisponibles: ProductoNoDisponible[];
   totales: RecomendacionTotales;
+  carritos: CarritoCadena[];
 }

@@ -50,14 +50,31 @@
         <section class="tarjeta grupo">
           <header>
             <h2>{{ grupo.cadena }}</h2>
-            <span class="subtotal">{{ grupo.subtotal | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
+            <div class="header-derecha">
+              @if (grupo.carritoUrl) {
+                <a
+                  class="boton-carrito"
+                  [href]="grupo.carritoUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Abre el sitio de {{ grupo.cadena }} con estos productos ya cargados en el carrito"
+                >🛒 Armar carrito</a>
+              }
+              <span class="subtotal">{{ grupo.subtotal | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
+            </div>
           </header>
           <ul>
             @for (item of grupo.items; track item.productoId) {
               <li>
                 <div class="item-detalle">
                   <span class="item-nombre">
-                    {{ item.producto }}
+                    @if (item.url) {
+                      <a [href]="item.url" target="_blank" rel="noopener noreferrer" class="link-producto" title="Ver en el sitio de {{ item.cadena }}">
+                        {{ item.producto }} ↗
+                      </a>
+                    } @else {
+                      {{ item.producto }}
+                    }
                     <a [routerLink]="['/historico', item.productoId]" class="link-historico" title="Historial de precios">📈</a>
                   </span>
                   <span class="item-meta">
