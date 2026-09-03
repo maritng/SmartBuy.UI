@@ -57,7 +57,7 @@
                   [href]="grupo.carritoUrl"
                   target="_blank"
                   rel="noopener noreferrer"
-                  title="Abre el sitio de {{ grupo.cadena }} con estos productos ya cargados en el carrito"
+                  title="Abre el sitio de {{ grupo.cadena }} y carga estos productos en su carrito. Si el sitio te pide sesión o método de entrega, elegilo y tocá el botón de nuevo."
                 >🛒 Armar carrito</a>
               }
               <span class="subtotal">{{ grupo.subtotal | currency: 'ARS' : 'symbol' : '1.0-2' }}</span>
@@ -95,6 +95,15 @@
             }
           </ul>
         </section>
+      }
+
+      @if (datos.carritos.length > 0) {
+        <p class="pista-carritos">
+          🛒 <strong>Armar carrito</strong> abre el sitio del súper con esos productos ya cargados.
+          Ojo: si el sitio te pide iniciar sesión o elegir el método de entrega (Jumbo, Disco y Vea
+          lo exigen antes de aceptar productos), completalo y tocá el botón de nuevo — el link
+          vuelve a armar el carrito, no se pierde nada.
+        </p>
       }
 
       @if (datos.noDisponibles.length > 0) {
