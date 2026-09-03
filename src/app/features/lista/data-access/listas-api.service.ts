@@ -30,6 +30,36 @@ export interface GuardarListaItem {
   cantidad: number;
 }
 
+/** El costo de la canasta un día. Solo los días completos son comparables. */
+export interface InflacionPunto {
+  fecha: string;
+  total: number;
+  productosConPrecio: number;
+  completo: boolean;
+}
+
+export interface InflacionVariacion {
+  diasCompletos: number;
+  fechaInicial: string | null;
+  fechaFinal: string | null;
+  totalInicial: number | null;
+  totalFinal: number | null;
+  variacionPorcentaje: number | null;
+  variacionMonto: number | null;
+  mensaje: string;
+}
+
+/** Respuesta de GET /api/Lista/GetInflacion. */
+export interface InflacionCanasta {
+  listaId: number;
+  lista: string;
+  dias: number;
+  productosEnLista: number;
+  productosSinPrecio: string[];
+  puntos: InflacionPunto[];
+  variacion: InflacionVariacion;
+}
+
 /** Endpoints protegidos: el interceptor agrega el Bearer solo. */
 @Injectable({ providedIn: 'root' })
 export class ListasApiService {
@@ -56,6 +86,12 @@ export class ListasApiService {
   eliminarLista(id: number): Observable<StandarResponse<{ id: number }>> {
     return this.http.delete<StandarResponse<{ id: number }>>(`${API_BASE}/Lista/EliminarLista`, {
       params: new HttpParams().set('id', id)
+    });
+  }
+
+  getInflacion(listaId: number, dias: number): Observable<StandarResponse<InflacionCanasta>> {
+    return this.http.get<StandarResponse<InflacionCanasta>>(`${API_BASE}/Lista/GetInflacion`, {
+      params: new HttpParams().set('listaId', listaId).set('dias', dias)
     });
   }
 

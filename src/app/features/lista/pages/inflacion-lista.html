@@ -1,0 +1,126 @@
+<div class="encabezado">
+  <a routerLink="/listas" class="volver">← Mis listas</a>
+  <h1>{{ datos()?.lista ?? 'Inflación de la canasta' }}</h1>
+</div>
+
+<div class="ventanas" role="group" aria-label="Ventana de tiempo">
+  @for (ventana of ventanas; track ventana) {
+    <button
+      type="button"
+      class="chip-ventana"
+      [class.activa]="dias() === ventana"
+      (click)="cambiarVentana(ventana)"
+    >{{ ventana }} días</button>
+  }
+</div>
+
+@switch (estado()) {
+  @case ('cargando') {
+    <div class="tarjeta"><div class="esqueleto" aria-hidden="true"></div></div>
+  }
+  @case ('error') {
+    <div class="mensaje-error">
+      @for (error of errores(); track error) {
+        <p>{{ error }}</p>
+      }
+      <button type="button" class="reintentar" (click)="cargar()">Reintentar</button>
+    </div>
+  }
+  @case ('ok') {
+    @if (datos(); as resumen) {
+      <section
+        class="tarjeta variacion"
+        [class.sube]="(resumen.variacion.variacionPorcentaje ?? 0) > 0.5"
+        [class.baja]="(resumen.variacion.variacionPorcentaje ?? 0) < -0.5"
+      >
+        <p class="mensaje">{{ resumen.variacion.mensaje }}</p>
+        @if (resumen.variacion.totalInicial !== null) {
+          <dl class="datos">
+            <div>
+              <dt>{{ formatearFecha(resumen.variacion.fechaInicial!) }}</dt>
+              <dd>{{ resumen.variacion.totalInicial | currency: 'ARS' : 'symbol' : '1.0-2' }}</dd>
+            </div>
+            @if (resumen.variacion.totalFinal !== null && resumen.variacion.diasCompletos > 1) {
+              <div>
+                <dt>{{ formatearFecha(resumen.variacion.fechaFinal!) }}</dt>
+                <dd>{{ resumen.variacion.totalFinal | currency: 'ARS' : 'symbol' : '1.0-2' }}</dd>
+              </div>
+              <div>
+                <dt>Variación</dt>
+                <dd>{{ (resumen.variacion.variacionPorcentaje ?? 0) > 0 ? '+' : '' }}{{ resumen.variacion.variacionPorcentaje | number: '1.0-1' }}%</dd>
+              </div>
+            }
+          </dl>
+        }
+      </section>
+
+      <section class="tarjeta">
+        @if (puntosGrafico().length === 0) {
+          <p class="vacio">
+            Todavía no hay precios capturados para los productos de esta lista.
+            La serie arranca sola con las próximas capturas de los bots.
+          </p>
+        } @else {
+          <div class="grafico-scroll">
+            <svg
+              [attr.viewBox]="'0 0 ' + ancho + ' ' + alto"
+              class="grafico"
+              role="img"
+              aria-label="Evolución del costo total de la canasta"
+            >
+              @for (tick of ticksY(); track tick.y) {
+                <line [attr.x1]="70" [attr.x2]="ancho - 8" [attr.y1]="tick.y" [attr.y2]="tick.y" class="grilla" />
+                <text [attr.x]="66" [attr.y]="tick.y + 4" text-anchor="end" class="eje">{{ tick.etiqueta }}</text>
+              }
+
+              @if (areaCompletos()) {
+                <polygon [attr.points]="areaCompletos()" class="area" />
+              }
+              @if (trazoCompletos()) {
+                <polyline [attr.points]="trazoCompletos()" class="serie" />
+              }
+
+              @for (punto of puntosGrafico(); track punto.fecha) {
+                <circle
+                  [attr.cx]="punto.x"
+                  [attr.cy]="punto.y"
+                  r="4"
+                  [class.punto-completo]="punto.completo"
+                  [class.punto-incompleto]="!punto.completo"
+                >
+                  <title>
+                    {{ formatearFecha(punto.fecha) }} · $ {{ punto.total }}
+                    {{ punto.completo ? '' : '(faltan productos: ' + punto.productosConPrecio + ' de ' + (datos()!.productosEnLista - datos()!.productosSinPrecio.length) + ' con precio)' }}
+                  </title>
+                </circle>
+              }
+
+              @for (etiqueta of etiquetasX(); track etiqueta.x) {
+                <text [attr.x]="etiqueta.x" [attr.y]="yEtiquetasX" [attr.text-anchor]="etiqueta.ancla" class="eje">
+                  {{ etiqueta.texto }}
+                </text>
+              }
+            </svg>
+          </div>
+
+          <p class="pista">
+            Costo total óptimo por día: cada producto al mejor precio efectivo entre todas las cadenas,
+            por su cantidad. Los puntos huecos son días con datos incompletos y no cuentan para la variación.
+            Ventana: últimos {{ resumen.dias }} días ({{ resumen.variacion.diasCompletos }} completos).
+          </p>
+        }
+
+        @if (resumen.productosSinPrecio.length > 0) {
+          <div class="sin-precio">
+            <strong>Sin precios en la ventana (no suman al total):</strong>
+            <ul>
+              @for (producto of resumen.productosSinPrecio; track producto) {
+                <li>{{ producto }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </section>
+    }
+  }
+}

@@ -51,6 +51,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/lista/pages/mis-listas').then((m) => m.MisListas)
   },
+  {
+    path: 'listas/:listaId/inflacion',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/lista/pages/inflacion-lista').then((m) => m.InflacionLista)
+  },
   { path: '', pathMatch: 'full', redirectTo: 'lista' },
   { path: '**', redirectTo: 'lista' }
 ];
