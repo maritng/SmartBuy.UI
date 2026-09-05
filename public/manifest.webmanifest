@@ -1,11 +1,11 @@
 {
-  "name": "SmartBuy",
-  "short_name": "SmartBuy",
-  "description": "Tu compra de supermercado, repartida donde más conviene.",
+  "name": "Chango",
+  "short_name": "Chango",
+  "description": "Comprá mejor. Ahorrá siempre. Tu chango, repartido donde más conviene.",
   "lang": "es-AR",
   "display": "standalone",
-  "theme_color": "#0e7b4b",
-  "background_color": "#f6f7f5",
+  "theme_color": "#1aa14f",
+  "background_color": "#f7f9f4",
   "scope": "./",
   "start_url": "./lista",
   "icons": [

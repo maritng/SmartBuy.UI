@@ -14,8 +14,22 @@
   display: flex;
   align-items: center;
   gap: var(--esp-2);
-  font-size: 1.2rem;
-  font-weight: 700;
+}
+
+.marca-nombre {
+  font-family: var(--fuente-marca);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.marca-chan {
+  color: var(--color-tinta);
+}
+
+.marca-go {
+  color: var(--color-primario);
 }
 
 .sesion {
@@ -51,8 +65,10 @@
   }
 }
 
-.marca-icono {
-  font-size: 1.4rem;
+.marca-mono {
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 
 .navegacion {

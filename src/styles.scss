@@ -1,25 +1,27 @@
 /* ============================================================================
-   SmartBuy - Estilos globales y design tokens.
-   Identidad: comparador de precios -> fondo claro, verde-ahorro como acento,
-   números protagonistas. Mobile-first: los componentes parten del layout de
-   celular y se expanden con media queries min-width.
+   Chango - Estilos globales y design tokens (identidad fase 1, sobre SmartBuy).
+   El changuito optimizado: crema cálido de fondo, verde "go" como acento,
+   marino chango como tinta, todo un poco más redondo. Números protagonistas.
+   Mobile-first: los componentes parten del layout de celular y se expanden
+   con media queries min-width.
    ============================================================================ */
 
 :root {
   /* Color */
-  --color-fondo: #f6f7f5;
+  --color-fondo: #f7f9f4;         /* crema */
   --color-superficie: #ffffff;
-  --color-tinta: #1d2321;
-  --color-tinta-suave: #5c6662;
-  --color-borde: #e2e6e2;
-  --color-primario: #0e7b4b;      /* verde ahorro */
-  --color-primario-suave: #e3f1e9;
+  --color-tinta: #23315e;         /* marino chango */
+  --color-tinta-suave: #5d6a85;
+  --color-borde: #e1e7de;
+  --color-primario: #1aa14f;      /* verde go */
+  --color-primario-suave: #e2f4e8;
   --color-acento: #ffd84d;        /* amarillo etiqueta de precio */
   --color-error: #b3261e;
   --color-error-suave: #fdeceb;
 
   /* Tipografía */
-  --fuente: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --fuente: "Nunito", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --fuente-marca: "Baloo 2", "Nunito", "Segoe UI", system-ui, sans-serif;
   --texto-base: 1rem;
   --texto-chico: 0.85rem;
   --texto-titulo: 1.35rem;
@@ -31,8 +33,8 @@
   --esp-3: 1rem;
   --esp-4: 1.5rem;
   --esp-5: 2.5rem;
-  --radio: 10px;
-  --sombra: 0 1px 3px rgba(29, 35, 33, 0.08);
+  --radio: 13px;
+  --sombra: 0 1px 3px rgba(35, 49, 94, 0.08);
 }
 
 * {
@@ -55,6 +57,7 @@ h2,
 h3 {
   margin: 0 0 var(--esp-3);
   line-height: 1.2;
+  font-family: var(--fuente-marca);
 }
 
 a {
