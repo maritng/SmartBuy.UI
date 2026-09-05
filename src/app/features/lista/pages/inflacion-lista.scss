@@ -23,6 +23,12 @@
   text-decoration: none;
 }
 
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2) var(--esp-4);
+}
+
 .ventanas {
   display: flex;
   gap: var(--esp-2);

@@ -44,6 +44,7 @@ export class Tendencias {
   protected readonly datos = signal<EvolucionCategorias | null>(null);
   protected readonly errores = signal<string[]>([]);
   protected readonly dias = signal(90);
+  protected readonly conPromos = signal(true);
 
   protected readonly ventanas = [30, 90, 180];
 
@@ -54,6 +55,7 @@ export class Tendencias {
   constructor() {
     effect(() => {
       this.dias();
+      this.conPromos();
       this.cargar();
     });
   }
@@ -61,7 +63,7 @@ export class Tendencias {
   protected cargar(): void {
     this.estado.set('cargando');
 
-    this.tendenciasService.getEvolucion(this.dias()).subscribe({
+    this.tendenciasService.getEvolucion(this.dias(), this.conPromos()).subscribe({
       next: (respuesta) => {
         if (respuesta.success && respuesta.result) {
           this.datos.set(respuesta.result);

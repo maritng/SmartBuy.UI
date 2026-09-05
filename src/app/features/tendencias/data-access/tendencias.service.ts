@@ -9,8 +9,8 @@ import { EvolucionCategorias } from '../models/tendencias.models';
 export class TendenciasService {
   private readonly http = inject(HttpClient);
 
-  getEvolucion(dias: number): Observable<StandarResponse<EvolucionCategorias>> {
-    const params = new HttpParams().set('dias', dias);
+  getEvolucion(dias: number, conPromos: boolean): Observable<StandarResponse<EvolucionCategorias>> {
+    const params = new HttpParams().set('dias', dias).set('conPromos', conPromos);
 
     return this.http.get<StandarResponse<EvolucionCategorias>>(`${API_BASE}/Tendencia/GetEvolucionCategorias`, { params });
   }

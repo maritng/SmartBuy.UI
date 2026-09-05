@@ -86,7 +86,9 @@
                     {{ item.cadenasComparadas === 1 ? 'cadena' : 'cadenas' }}
                     · precio del {{ item.fechaPrecio | date: 'dd/MM' }}
                   </span>
-                  @if (item.tipoOferta) {
+                  @if (item.detallePromo) {
+                    <span class="oferta" [class.oferta-aplicada]="item.promoAplicada">🏷️ {{ item.detallePromo }}</span>
+                  } @else if (item.tipoOferta) {
                     <span class="oferta">🏷️ {{ item.tipoOferta }}</span>
                   }
                 </div>
@@ -102,7 +104,9 @@
           🛒 <strong>Armar carrito</strong> abre el sitio del súper con esos productos ya cargados.
           Ojo: si el sitio te pide iniciar sesión o elegir el método de entrega (Jumbo, Disco y Vea
           lo exigen antes de aceptar productos), completalo y tocá el botón de nuevo — el link
-          vuelve a armar el carrito, no se pierde nada.
+          vuelve a armar el carrito, no se pierde nada. Además, el súper puede aplicarte en el
+          carrito ofertas extra de tu cuenta (socio, banco, personalizadas): si el total te da
+          más barato que acá, es por eso.
         </p>
       }
 

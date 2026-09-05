@@ -166,6 +166,13 @@
   margin-top: var(--esp-1);
 }
 
+/* Promo efectivamente aprovechada: el subtotal ya la incluye */
+.oferta-aplicada {
+  background: var(--color-primario-suave);
+  color: var(--color-primario);
+  font-weight: 600;
+}
+
 .item-subtotal {
   font-weight: 600;
   font-variant-numeric: tabular-nums;

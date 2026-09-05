@@ -1,14 +1,20 @@
 <div class="encabezado">
   <h1>Tendencias por categoría</h1>
-  <div class="ventanas" role="group" aria-label="Ventana de tiempo">
-    @for (ventana of ventanas; track ventana) {
-      <button
-        type="button"
-        class="chip-ventana"
-        [class.activa]="dias() === ventana"
-        (click)="cambiarVentana(ventana)"
-      >{{ ventana }} días</button>
-    }
+  <div class="filtros">
+    <div class="ventanas" role="group" aria-label="Ventana de tiempo">
+      @for (ventana of ventanas; track ventana) {
+        <button
+          type="button"
+          class="chip-ventana"
+          [class.activa]="dias() === ventana"
+          (click)="cambiarVentana(ventana)"
+        >{{ ventana }} días</button>
+      }
+    </div>
+    <div class="ventanas" role="group" aria-label="Promociones">
+      <button type="button" class="chip-ventana" [class.activa]="conPromos()" (click)="conPromos.set(true)" title="Índice sobre precios efectivos (promos incluidas)">Con promos</button>
+      <button type="button" class="chip-ventana" [class.activa]="!conPromos()" (click)="conPromos.set(false)" title="Índice sobre precios de góndola: inflación limpia, sin el serrucho de las promos">Sin promos</button>
+    </div>
   </div>
 </div>
 

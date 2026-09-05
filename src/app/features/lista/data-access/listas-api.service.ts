@@ -89,9 +89,9 @@ export class ListasApiService {
     });
   }
 
-  getInflacion(listaId: number, dias: number): Observable<StandarResponse<InflacionCanasta>> {
+  getInflacion(listaId: number, dias: number, conPromos: boolean): Observable<StandarResponse<InflacionCanasta>> {
     return this.http.get<StandarResponse<InflacionCanasta>>(`${API_BASE}/Lista/GetInflacion`, {
-      params: new HttpParams().set('listaId', listaId).set('dias', dias)
+      params: new HttpParams().set('listaId', listaId).set('dias', dias).set('conPromos', conPromos)
     });
   }
 

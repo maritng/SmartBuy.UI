@@ -3,15 +3,21 @@
   <h1>{{ datos()?.producto ?? 'Historial de precios' }}</h1>
 </div>
 
-<div class="ventanas" role="group" aria-label="Ventana de tiempo">
-  @for (ventana of ventanas; track ventana) {
-    <button
-      type="button"
-      class="chip-ventana"
-      [class.activa]="dias() === ventana"
-      (click)="cambiarVentana(ventana)"
-    >{{ ventana }} días</button>
-  }
+<div class="filtros">
+  <div class="ventanas" role="group" aria-label="Ventana de tiempo">
+    @for (ventana of ventanas; track ventana) {
+      <button
+        type="button"
+        class="chip-ventana"
+        [class.activa]="dias() === ventana"
+        (click)="cambiarVentana(ventana)"
+      >{{ ventana }} días</button>
+    }
+  </div>
+  <div class="ventanas" role="group" aria-label="Promociones">
+    <button type="button" class="chip-ventana" [class.activa]="conPromos()" (click)="conPromos.set(true)" title="Precio efectivo: promos por cantidad incluidas">Con promos</button>
+    <button type="button" class="chip-ventana" [class.activa]="!conPromos()" (click)="conPromos.set(false)" title="Precio de góndola pagando una unidad: nivel de precios limpio">Sin promos</button>
+  </div>
 </div>
 
 @switch (estado()) {
@@ -102,7 +108,8 @@
           </ul>
 
           <p class="pista">
-            Mejor precio efectivo por día en cada cadena (ofertas por cantidad incluidas),
+            Mejor precio por día en cada cadena,
+            {{ conPromos() ? 'con las promos por cantidad incluidas (precio efectivo)' : 'sin promos: precio de góndola pagando una unidad' }},
             capturado automáticamente por los bots. Ventana: últimos {{ resumen.dias }} días
             ({{ resumen.senal.diasConDatos }} con datos).
           </p>

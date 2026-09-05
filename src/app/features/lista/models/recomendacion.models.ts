@@ -22,8 +22,13 @@ export interface RecomendacionItem {
   codigoExterno: string;
   /** Página del producto en el sitio de la cadena, si está capturada. */
   url: string | null;
+  /** Precio de góndola por unidad (lista u oferta directa); el subtotal aplica la promo escalonada. */
   precioUnitario: number;
   tipoOferta: string | null;
+  /** true si la cantidad pedida aprovecha la promo (el subtotal ya la incluye). */
+  promoAplicada: boolean;
+  /** "3x2 aplicado: llevás 3, pagás 2" / "Hay 3x2 llevando 3 — pagás precio lleno". */
+  detallePromo: string | null;
   fechaPrecio: string;
   /** Precio normalizado por unidad base ($/L, $/kg, $/un); null sin contenido cargado. */
   precioPorUnidad: number | null;

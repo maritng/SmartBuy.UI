@@ -55,6 +55,7 @@ export class HistoricoProducto {
   protected readonly datos = signal<HistoricoResumen | null>(null);
   protected readonly errores = signal<string[]>([]);
   protected readonly dias = signal(90);
+  protected readonly conPromos = signal(true);
 
   protected readonly ventanas = [30, 90, 180];
 
@@ -65,6 +66,7 @@ export class HistoricoProducto {
     effect(() => {
       this.productoId();
       this.dias();
+      this.conPromos();
       this.cargar();
     });
   }
@@ -72,7 +74,7 @@ export class HistoricoProducto {
   protected cargar(): void {
     this.estado.set('cargando');
 
-    this.historicoService.getHistorico(Number(this.productoId()), this.dias()).subscribe({
+    this.historicoService.getHistorico(Number(this.productoId()), this.dias(), this.conPromos()).subscribe({
       next: (respuesta) => {
         if (respuesta.success && respuesta.result) {
           this.datos.set(respuesta.result);

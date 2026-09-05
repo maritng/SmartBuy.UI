@@ -3,15 +3,21 @@
   <h1>{{ datos()?.lista ?? 'Inflación de la canasta' }}</h1>
 </div>
 
-<div class="ventanas" role="group" aria-label="Ventana de tiempo">
-  @for (ventana of ventanas; track ventana) {
-    <button
-      type="button"
-      class="chip-ventana"
-      [class.activa]="dias() === ventana"
-      (click)="cambiarVentana(ventana)"
-    >{{ ventana }} días</button>
-  }
+<div class="filtros">
+  <div class="ventanas" role="group" aria-label="Ventana de tiempo">
+    @for (ventana of ventanas; track ventana) {
+      <button
+        type="button"
+        class="chip-ventana"
+        [class.activa]="dias() === ventana"
+        (click)="cambiarVentana(ventana)"
+      >{{ ventana }} días</button>
+    }
+  </div>
+  <div class="ventanas" role="group" aria-label="Promociones">
+    <button type="button" class="chip-ventana" [class.activa]="conPromos()" (click)="conPromos.set(true)" title="Costo con promos por cantidad incluidas">Con promos</button>
+    <button type="button" class="chip-ventana" [class.activa]="!conPromos()" (click)="conPromos.set(false)" title="Costo a precio de góndola: nivel de precios limpio">Sin promos</button>
+  </div>
 </div>
 
 @switch (estado()) {

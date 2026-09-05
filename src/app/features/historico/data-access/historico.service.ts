@@ -9,8 +9,8 @@ import { HistoricoResumen } from '../models/historico.models';
 export class HistoricoService {
   private readonly http = inject(HttpClient);
 
-  getHistorico(productoId: number, dias: number): Observable<StandarResponse<HistoricoResumen>> {
-    const params = new HttpParams().set('productoId', productoId).set('dias', dias);
+  getHistorico(productoId: number, dias: number, conPromos: boolean): Observable<StandarResponse<HistoricoResumen>> {
+    const params = new HttpParams().set('productoId', productoId).set('dias', dias).set('conPromos', conPromos);
 
     return this.http.get<StandarResponse<HistoricoResumen>>(`${API_BASE}/Producto/GetHistorico`, { params });
   }

@@ -39,6 +39,7 @@ export class InflacionLista {
   protected readonly datos = signal<InflacionCanasta | null>(null);
   protected readonly errores = signal<string[]>([]);
   protected readonly dias = signal(90);
+  protected readonly conPromos = signal(true);
 
   protected readonly ventanas = [30, 90, 180];
 
@@ -50,6 +51,7 @@ export class InflacionLista {
     effect(() => {
       this.listaId();
       this.dias();
+      this.conPromos();
       this.cargar();
     });
   }
@@ -57,7 +59,7 @@ export class InflacionLista {
   protected cargar(): void {
     this.estado.set('cargando');
 
-    this.listasApi.getInflacion(Number(this.listaId()), this.dias()).subscribe({
+    this.listasApi.getInflacion(Number(this.listaId()), this.dias(), this.conPromos()).subscribe({
       next: (respuesta) => {
         if (respuesta.success && respuesta.result) {
           this.datos.set(respuesta.result);
