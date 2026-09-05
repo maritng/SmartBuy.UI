@@ -1,5 +1,10 @@
 .hero {
   margin-bottom: var(--esp-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--esp-3);
 
   h1 {
     font-size: var(--texto-titulo);
@@ -11,6 +16,12 @@
     max-width: 60ch;
     margin: 0;
   }
+}
+
+.hero-chango {
+  width: 130px;
+  height: auto;
+  flex-shrink: 0;
 }
 
 .grilla {
@@ -55,10 +66,20 @@
   cursor: pointer;
 }
 
-/* Tablet y desktop */
+/* Tablet y desktop: el mono y el texto lado a lado */
 @media (min-width: 560px) {
   .grilla {
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  }
+
+  .hero {
+    flex-direction: row;
+    text-align: left;
+    gap: var(--esp-4);
+  }
+
+  .hero-chango {
+    width: 165px;
   }
 
   .hero h1 {
