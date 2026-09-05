@@ -19,8 +19,8 @@
     @case ('ok') {
       @if (listas().length === 0) {
         <p class="vacio">
-          Todavía no guardaste ninguna lista. Armá tu changuito en
-          <a routerLink="/lista">Mi lista</a> y usá "Guardar como…".
+          Todavía no guardaste ninguna lista. Armá tu chango en
+          <a routerLink="/lista">Mi chango</a> y usá "Guardar como…".
         </p>
       } @else {
         <ul class="listado">
@@ -33,7 +33,7 @@
                   · {{ lista.fecha | date: 'dd/MM/yyyy' }}
                 </span>
               </button>
-              <a class="inflacion" title="Inflación de esta canasta" [routerLink]="['/listas', lista.id, 'inflacion']">📈</a>
+              <a class="inflacion" title="¿Cuánto subió este chango?" [routerLink]="['/listas', lista.id, 'inflacion']">📈</a>
               <button type="button" class="eliminar" title="Eliminar" (click)="eliminar(lista)">🗑️</button>
             </li>
           }

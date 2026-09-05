@@ -35,7 +35,7 @@
   @case ('ok') {
     @if (datos(); as resumen) {
       <section class="tarjeta senal" [class]="'senal-' + resumen.senal.veredicto">
-        <p class="senal-mensaje">{{ resumen.senal.mensaje }}</p>
+        <p class="senal-mensaje">🐒 {{ resumen.senal.mensaje }}</p>
         @if (resumen.senal.precioActual !== null) {
           <dl class="senal-datos">
             <div>

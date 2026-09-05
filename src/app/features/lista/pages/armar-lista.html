@@ -1,4 +1,4 @@
-<h1>Mi lista de compras</h1>
+<h1>Mi chango</h1>
 
 @if (auth.logueado()) {
   <section class="tarjeta guardado">
@@ -85,7 +85,7 @@
   <h2>Productos ({{ store.cantidadTotal() }})</h2>
 
   @if (store.vacia()) {
-    <p class="pista">Tu lista está vacía: buscá arriba y agregá productos.</p>
+    <p class="pista">Tu chango está vacío: buscá arriba y agregá productos.</p>
   } @else {
     <ul class="items">
       @for (item of store.items(); track item.productoId) {
@@ -100,7 +100,7 @@
         </li>
       }
     </ul>
-    <button type="button" class="limpiar" (click)="store.limpiar()">Vaciar lista</button>
+    <button type="button" class="limpiar" (click)="store.limpiar()">Vaciar el chango</button>
   }
 </section>
 

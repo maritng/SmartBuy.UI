@@ -1,6 +1,6 @@
 <div class="encabezado">
   <a routerLink="/listas" class="volver">← Mis listas</a>
-  <h1>{{ datos()?.lista ?? 'Inflación de la canasta' }}</h1>
+  <h1>{{ datos()?.lista ?? '¿Cuánto subió tu chango?' }}</h1>
 </div>
 
 <div class="filtros">
@@ -39,7 +39,7 @@
         [class.sube]="(resumen.variacion.variacionPorcentaje ?? 0) > 0.5"
         [class.baja]="(resumen.variacion.variacionPorcentaje ?? 0) < -0.5"
       >
-        <p class="mensaje">{{ resumen.variacion.mensaje }}</p>
+        <p class="mensaje">🐒 {{ resumen.variacion.mensaje }}</p>
         @if (resumen.variacion.totalInicial !== null) {
           <dl class="datos">
             <div>
